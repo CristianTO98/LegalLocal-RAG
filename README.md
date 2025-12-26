@@ -1,0 +1,1 @@
+# LegalLocal-RAG
