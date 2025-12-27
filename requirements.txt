@@ -1,52 +1,11 @@
-# ==============================================================================
-# LegalLocal RAG v2.0 - Requirements
-# ==============================================================================
-# Optimized for: CPU-only laptops (Ryzen 5/Intel i5, 16GB RAM)
-# Stack: Custom Parent-Child chunking + BGE embeddings + Ministral 3B
-# ==============================================================================
-
-# Core Framework
 chainlit>=1.0.0
-
-# ==============================================================================
-# LLM Inference Engine (CPU-optimized)
-# ==============================================================================
-# NOTE: For best performance on Ryzen, install with:
-# CMAKE_ARGS="-DLLAMA_BLAS=ON -DLLAMA_BLAS_VENDOR=OpenBLAS" pip install llama-cpp-python
-# On Windows: pip install llama-cpp-python (uses pre-built wheels)
 llama-cpp-python>=0.3.2
-
-# ==============================================================================
-# Vector Database (Local, No Server)
-# ==============================================================================
 chromadb>=0.4.22
-
-# ==============================================================================
-# Embedding Model: BAAI/bge-small-en-v1.5
-# ==============================================================================
-# - Size: ~130MB (fast loading)
-# - Context: 512 tokens (perfect for child chunks)
-# - Performance: SOTA on MTEB retrieval benchmarks
 sentence-transformers>=2.2.2
 huggingface-hub>=0.20.0
-
-# ==============================================================================
-# PDF Processing (PyMuPDF for block extraction)
-# ==============================================================================
-# PyMuPDF (fitz) - ultrafast PDF processing with block-level extraction
 pymupdf>=1.23.0
-
-# ==============================================================================
-# Numerical & Core
-# ==============================================================================
 numpy>=1.24.0
 torch>=2.0.0
-
-# Image Processing (for PDF page rendering)
 Pillow>=10.0.0
-
-# ==============================================================================
-# Utilities
-# ==============================================================================
 tqdm>=4.66.0
 
