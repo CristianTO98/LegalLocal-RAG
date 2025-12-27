@@ -16,9 +16,10 @@ venv/
 # Embeddings Cache
 /.cache/
 
-# Streamlit
-.streamlit/
-static/
+# Chainlit
+.chainlit/
+chainlit.md
+.files/
 
 # Temporary files
 *.tmp
@@ -29,5 +30,6 @@ temp_*.pdf
 .vscode/
 .cursor/
 .idea/
+
 
 
