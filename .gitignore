@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Models (Large GGUF files)
+/models/*
+!/models/.gitkeep
+
+# Vector Database (Local persistence)
+/chroma_db/*
+!/chroma_db/.gitkeep
+
+# Embeddings Cache
+/.cache/
+
+# Streamlit
+.streamlit/
+static/
+
+# Temporary files
+*.tmp
+*.pdf
+temp_*.pdf
+
+# IDEs
+.vscode/
+.cursor/
+.idea/
+
+

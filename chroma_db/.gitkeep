@@ -1,0 +1,33 @@
+# ==============================================================================
+# LegalLocal RAG - ChromaDB Directory
+# ==============================================================================
+#
+# This directory is used for ChromaDB vector store persistence (optional).
+#
+# CURRENT CONFIGURATION: In-Memory (Ephemeral)
+# ─────────────────────────────────────────────
+# The application currently uses in-memory storage, meaning:
+# - Vectors are lost when the application restarts
+# - Each session requires re-uploading documents
+# - Maximum privacy: no data persisted to disk
+#
+# TO ENABLE PERSISTENCE:
+# ─────────────────────────────────────────────
+# Modify the create_vector_store() function in app.py:
+#
+# vector_store = lc["Chroma"].from_documents(
+#     documents=_documents,
+#     embedding=_embeddings,
+#     collection_name=collection_name,
+#     persist_directory=str(CHROMA_DIR)  # Add this line
+# )
+#
+# SECURITY NOTE:
+# ─────────────────────────────────────────────
+# If using persistence with sensitive legal documents:
+# 1. Encrypt this directory when not in use
+# 2. Clear contents after each case/project
+# 3. Include in backup/destruction procedures
+#
+# ==============================================================================
+

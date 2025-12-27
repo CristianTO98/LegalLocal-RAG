@@ -1,0 +1,44 @@
+# ==============================================================================
+# LegalLocal RAG - Requirements
+# ==============================================================================
+
+# Core Framework
+streamlit>=1.28.0
+
+# LLM Inference Engine (CPU-optimized)
+# NOTE: For best performance on Ryzen, install with:
+# CMAKE_ARGS="-DLLAMA_BLAS=ON -DLLAMA_BLAS_VENDOR=OpenBLAS" pip install llama-cpp-python
+# On Windows: pip install llama-cpp-python (uses pre-built wheels)
+llama-cpp-python>=0.2.90
+
+# LangChain Ecosystem (RAG Orchestration)
+# NOTE: LangChain 1.0+ moved chains to langchain-classic for backwards compatibility
+langchain>=0.2.0
+langchain-community>=0.2.0
+langchain-core>=0.2.0
+langchain-huggingface>=0.0.3
+langchain-text-splitters>=0.2.0
+langchain-classic>=0.0.1
+
+# Vector Database (Local, No Server)
+chromadb>=0.4.22
+
+# Embedding Models (Local Inference)
+sentence-transformers>=2.2.2
+huggingface-hub>=0.20.0
+
+# PDF Processing
+pypdf>=3.17.0
+pymupdf>=1.23.0
+
+# Numerical & Tokenization
+numpy>=1.24.0
+torch>=2.0.0
+
+# Image Processing (for PDF rendering)
+Pillow>=10.0.0
+
+# Utilities
+python-dotenv>=1.0.0
+tqdm>=4.66.0
+
