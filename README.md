@@ -4,7 +4,7 @@ This project was born out of a clear necessity: the legal sector handles extreme
 
 ## Why this approach?
 
-Most current artificial intelligence systems (like ChatGPT) send your data to external servers. For a lawyer, this is an unacceptable risk. This system runs entirely on your machine, leveraging language models optimized to work on standard office laptops.
+Most current artificial intelligence systems (like ChatGPT) send your data to external servers. For a lawyer, this is an unacceptable risk. This system runs entirely on your machine, leveraging language models specifically optimized to provide the fastest possible response on standard office CPUs, without requiring a dedicated GPU. Performance has been carefully tuned and verified on consumer hardware like the **AMD Ryzen 5 4500U**.
 
 ### The Problem with Traditional Text Splitting (Chunking)
 
