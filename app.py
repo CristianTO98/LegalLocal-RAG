@@ -161,8 +161,9 @@ async def main(message: cl.Message):
     context = "\n\n---\n\n".join(context_parts)
     
     # Console logs for debugging the retrieval
+    context_tokens = engine.count_tokens(context)
     print(f"\n[DEBUG] User Question: {query[:100]}...")
-    print(f"[DEBUG] Total context size: {len(context)} chars")
+    print(f"[DEBUG] Total context size: {context_tokens} tokens")
     print(f"[DEBUG] Relevant sources: {len(sources)}")
     
     # If we couldn't find anything relevant, we let the user know

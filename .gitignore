@@ -1,35 +1,23 @@
-# Python
+# Python dependencies
+venv/
 __pycache__/
 *.py[cod]
 *$py.class
-venv/
+
+# Environment variables
 .env
 
-# Models (Large GGUF files)
-/models/*
-!/models/.gitkeep
+# Large model files (Do not upload to Git)
+models/*.gguf
+models/*.bin
 
-# Vector Database (Local persistence)
-/chroma_db/*
-!/chroma_db/.gitkeep
-
-# Embeddings Cache
-/.cache/
-
-# Chainlit
+# Local databases and cache
+.cache/
+chroma_db/
 .chainlit/
-chainlit.md
-.files/
 
-# Temporary files
-*.tmp
-*.pdf
-temp_*.pdf
-
-# IDEs
+# IDE files
 .vscode/
-.cursor/
 .idea/
-
-
-
+*.swp
+.files
