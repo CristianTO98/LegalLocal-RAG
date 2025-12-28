@@ -121,7 +121,7 @@ async def main(message: cl.Message):
     
     results = collection.query(
         query_embeddings=query_emb.tolist(),
-        n_results=6, 
+        n_results=10, 
         include=["documents", "metadatas", "distances"]
     )
     
@@ -136,11 +136,11 @@ async def main(message: cl.Message):
         distance = results["distances"][0][i]
         
         # We ignore matches that are too far off semantically
-        if distance > 0.45:
+        if distance > 0.6:
             continue
             
         p_text = metadata["parent_text"]
-        if p_text not in seen_parents and len(sources) < 2:
+        if p_text not in seen_parents and len(sources) < 4:
             seen_parents.add(p_text)
             source_id = len(sources) + 1
             
@@ -150,20 +150,19 @@ async def main(message: cl.Message):
             
             sources.append({
                 "id": source_id,
-                "text": p_text, 
+                "text": p_text[:2000], 
                 "page": metadata["page"],
                 "pages": pages,
                 "page_display": page_display,
                 "distance": distance
             })
-            context_parts.append(f"[Source {source_id}] ({page_display}):\n{p_text}")
+            context_parts.append(f"[Source {source_id}] ({page_display}):\n{p_text[:2000]}")
 
     context = "\n\n---\n\n".join(context_parts)
     
     # Console logs for debugging the retrieval
-    context_tokens = engine.count_tokens(context)
     print(f"\n[DEBUG] User Question: {query[:100]}...")
-    print(f"[DEBUG] Total context size: {context_tokens} tokens")
+    print(f"[DEBUG] Total context size: {len(context)} chars")
     print(f"[DEBUG] Relevant sources: {len(sources)}")
     
     # If we couldn't find anything relevant, we let the user know

@@ -22,23 +22,6 @@ I have selected these tools to find the best balance between speed and precision
 *   **BGE-small-en-v1.5**: A very lightweight embedding model (only 130MB) that allows for almost instantaneous information retrieval.
 *   **Chainlit**: For the interface, instead of something overly complex, I used Chainlit because it offers a modern chat experience and allows you to view the original source text in a side panel by clicking on references.
 
-## Optimización de Rendimiento: Precisión de Tokens
-
-Este proyecto ha evolucionado de medir caracteres a utilizar **Tokens reales** para garantizar un rendimiento óptimo y predecible en CPU:
-
-1. **Ingeniería de Contexto con tiktoken**:
-    *   **La Lógica**: Los caracteres son engañosos (un carácter en español no ocupa lo mismo que en latín o código). Al usar `tiktoken`, medimos exactamente lo que la IA "ve".
-    *   **El Cambio**: El sistema ahora fragmenta los documentos basándose en el conteo de tokens, no de letras.
-
-2. **Filtrado Estricto y Contexto Ágil (2 fuentes x 550 tokens)**:
-    *   **La Lógica**: Para ganar velocidad sin sacrificar veracidad, hemos endurecido el umbral de similitud (Distancia Coseno de 0.6 a **0.45**).
-    *   **El Cambio**: Ahora solo se envían las **2 mejores fuentes** que superen este filtro de calidad.
-    *   **El Porqué**: Al reducir de 3 a 2 fuentes, el volumen de tokens baja drásticamente (~1100 tokens de contexto). Esto libera espacio en el `n_batch` de 2048, permitiendo que la respuesta se genere aún más rápido y con fuentes de mayor relevancia semántica. El progreso y el tamaño del contexto se pueden monitorear en tiempo real en la consola (medido en tokens).
-
-3. **Fragmentación de Alta Resolución**:
-    *   **La Lógica**: Chunks hijos de 150 tokens con un solapamiento de 50.
-    *   **El Porqué**: Al usar tokens para el solapamiento, nos aseguramos de que no se pierda el hilo semántico entre fragmentos, independientemente del idioma del documento.
-
 ## Quick Setup
 
 ### 1. Prepare the Environment

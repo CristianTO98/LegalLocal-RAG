@@ -8,7 +8,6 @@ import os
 import warnings
 from pathlib import Path
 from typing import List, Dict, Any
-import tiktoken
 
 # Let's clean up the console by hiding some of the noisier warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -25,13 +24,6 @@ CACHE_DIR = BASE_DIR / ".cache"
 MODELS_DIR.mkdir(exist_ok=True)
 CACHE_DIR.mkdir(exist_ok=True)
 
-# Tokenizer setup (standard cl100k_base used by Qwen and GPT-4)
-tokenizer = tiktoken.get_encoding("cl100k_base")
-
-def count_tokens(text: str) -> int:
-    """Returns the number of tokens in a string."""
-    return len(tokenizer.encode(text))
-
 # --- Configuration ---
 
 # Here we define which model we're using and how to load it
@@ -47,11 +39,11 @@ BGE_CONFIG = {
     "query_prefix": "Represent this sentence for searching relevant passages: ",
 }
 
-# How we want to split the documents (Measured in TOKENS now)
+# How we want to split the documents
 CHUNKING_CONFIG = {
-    "parent_chunk_size": 550,   # 550 tokens ≈ 2000-2200 caracteres
-    "child_chunk_size": 150,    # 150 tokens para la búsqueda
-    "child_chunk_overlap": 50,  # 50 tokens de solapamiento
+    "parent_chunk_size": 1000,
+    "child_chunk_size": 300,
+    "child_chunk_overlap": 50,
 }
 
 # The personality and rules for our AI assistant
@@ -109,10 +101,9 @@ def extract_text_from_pdf_blocks(pdf_path: str) -> List[Dict[str, Any]]:
     
     return documents
 
-def create_parent_chunks(documents: List[Dict[str, Any]], chunk_size: int = 550) -> List[Dict[str, Any]]:
+def create_parent_chunks(documents: List[Dict[str, Any]], chunk_size: int = 1000) -> List[Dict[str, Any]]:
     """
     Groups pages together into 'Parent' chunks for better AI context.
-    Uses token count instead of characters for precision.
     """
     if not documents: return []
     
@@ -124,8 +115,7 @@ def create_parent_chunks(documents: List[Dict[str, Any]], chunk_size: int = 550)
         page_text = doc["text"]
         page_num = doc["page"]
         
-        # We estimate tokens by adding the new page text
-        if current_chunk and count_tokens(current_chunk) + count_tokens(page_text) > chunk_size:
+        if current_chunk and len(current_chunk) + len(page_text) > chunk_size:
             parent_chunks.append({
                 "text": current_chunk.strip(),
                 "page": current_pages[0],
@@ -149,10 +139,9 @@ def create_parent_chunks(documents: List[Dict[str, Any]], chunk_size: int = 550)
     print(f"[Chunking] Parent chunks: {len(parent_chunks)}, Pages covered: {len(unique_pages)}")
     return parent_chunks
 
-def create_child_chunks(parent_chunks: List[Dict[str, Any]], child_size: int = 150, overlap: int = 50) -> List[Dict[str, Any]]:
+def create_child_chunks(parent_chunks: List[Dict[str, Any]], child_size: int = 300, overlap: int = 50) -> List[Dict[str, Any]]:
     """
     Splits Parent chunks into smaller 'Child' chunks for precise searching.
-    Uses token-based splitting for consistency.
     """
     child_chunks = []
     for p_idx, parent in enumerate(parent_chunks):
@@ -160,25 +149,23 @@ def create_child_chunks(parent_chunks: List[Dict[str, Any]], child_size: int = 1
         p_page = parent["page"]
         p_pages = parent.get("pages", [p_page])
         
-        # Get tokens for the whole parent
-        tokens = tokenizer.encode(p_text)
-        
-        if len(tokens) <= child_size:
+        if len(p_text) <= child_size:
             child_chunks.append({"text": p_text, "parent_idx": p_idx, "parent_text": p_text, "page": p_page, "pages": p_pages})
             continue
         
-        start_idx = 0
-        while start_idx < len(tokens):
-            end_idx = min(start_idx + child_size, len(tokens))
+        start = 0
+        while start < len(p_text):
+            end = min(start + child_size, len(p_text))
+            if end < len(p_text):
+                last_period = p_text[start:end].rfind(". ")
+                if last_period > child_size // 2: end = start + last_period + 2
             
-            # Decode the slice of tokens back to text
-            child_text = tokenizer.decode(tokens[start_idx:end_idx]).strip()
-            
+            child_text = p_text[start:end].strip()
             if child_text:
                 child_chunks.append({"text": child_text, "parent_idx": p_idx, "parent_text": p_text, "page": p_page, "pages": p_pages})
             
-            start_idx = end_idx - overlap
-            if end_idx >= len(tokens): break
+            start = end - overlap
+            if end >= len(p_text): break
             
     print(f"[Chunking] Child chunks: {len(child_chunks)}")
     return child_chunks
@@ -201,7 +188,7 @@ def load_llm():
         model_path=str(model_path.absolute()),
         n_ctx=MODEL_CONFIG["context_size"],
         n_threads=4,
-        n_batch=2048,
+        n_batch=256,
         verbose=False
     )
 
