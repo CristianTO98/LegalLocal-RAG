@@ -27,8 +27,10 @@ I have selected these tools to find the best balance between speed and precision
 This project has undergone multiple performance tests. While it is possible to achieve **38-second** responses with faster, smaller contexts, in the legal sector, **precision (Recall)** is non-negotiable. I have opted for a "Slow but Sure" configuration, where wait times typically range up to **60 seconds** to ensure maximum reliability and comprehensive context.
 
 ### Proven Results
-*   **Zero Hallucinations**: Verified through extensive **human evaluation**, the system consistently avoids "hallucinations" by enforcing strict context-only rules and high-integrity chunking, staying 100% faithful to the source text.
+*   **Precision and Hallucinations**: While highly reliable, in some scenarios the system has shown slight hallucinations. It has been noted that it is sometimes "not able to infer the positive condition (do X to get Y) from a negative sentence (if you don't do X, you only get Z)." Continuous work is underway to improve this logical inference.
 *   **High Precision on Complex Queries**: Human testers have confirmed the system successfully handles difficult legal questions where standard RAG systems fail, such as identifying specific exceptions or multi-part procedural requirements.
+
+![Example of a model response](assets/example_response.png)
 
 1. **Broad Retrieval (4 Sources & 0.6 Threshold)**:
     *   **Why**: Legal answers are often buried. By retrieving up to 4 sources with a 0.6 similarity threshold, we capture critical exceptions that often appear in the 3rd or 4th ranking position.
